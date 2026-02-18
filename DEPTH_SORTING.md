@@ -2,11 +2,11 @@
 
 ## Overview
 
-Stardew Valley uses a **Y-sort depth sorting system** to create the illusion of depth in its 2D world. This ensures that objects and characters render in the correct order relative to their position in the game world - objects that are "further back" (higher Y-coordinates) appear behind objects that are "closer to the camera" (lower Y-coordinates).
+Stardew Valley uses a **Y-sort depth sorting system** to create the illusion of depth in its 2D world. This ensures that objects and characters render in the correct order relative to their position in the game world - objects that are "further up" (lower Y-coordinates) appear behind objects that are "further down" (higher Y-coordinates). Higher Y-coordinates produce larger depth values, which cause sprites to render later (in front).
 
 ## Core Concept
 
-The fundamental principle is simple: **objects with higher Y-positions on the screen should be drawn first** (appear behind), while **objects with lower Y-positions should be drawn later** (appear in front). This creates the isometric-style depth effect seen in top-down 2D games.
+The fundamental principle is simple: **objects with lower Y-positions on the screen should be drawn first** (appear behind), while **objects with higher Y-positions should be drawn later** (appear in front). Since objects at higher Y-positions have larger depth values (via the formula `Y / 10000`), they are rendered after objects at lower Y-positions, causing them to appear in front. This creates the isometric-style depth effect seen in top-down 2D games.
 
 ## The layerDepth Formula
 
@@ -224,14 +224,14 @@ This calculates a depth slightly less than the player's draw layer, causing the 
 
 Stardew Valley's depth sorting system is elegant and effective:
 
-1. **Y-position determines depth**: Objects further "back" (higher Y) have smaller depth values
+1. **Y-position determines depth**: Objects further "down" (higher Y) have larger depth values, causing them to render later (in front)
 2. **Normalized depth values**: All depths are in the 0.0-1.0 range via division by 10,000
 3. **Layered rendering**: The game renders in distinct layers (background, characters, foreground)
 4. **Micro-offsets prevent z-fighting**: Tiny depth adjustments (0.00000011) ensure stable ordering of overlapping sprites
 5. **Special case handling**: Bridges, sitting, and farmer collisions all have custom depth logic
 6. **Bidirectional support**: Can render back-to-front or front-to-back as needed
 
-This system creates the classic 2D RPG depth effect where characters can walk "behind" objects when they're higher on screen, and "in front of" them when they're lower - a fundamental aspect of Stardew Valley's visual presentation.
+This system creates the classic 2D RPG depth effect where characters can walk "behind" objects when they're higher on screen (objects have smaller depth values, render earlier), and "in front of" them when they're lower on screen (characters have larger depth values, render later) - a fundamental aspect of Stardew Valley's visual presentation.
 
 ## Key Files
 
